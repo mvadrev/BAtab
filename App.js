@@ -1,22 +1,81 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; // Corrected import statement
-import HomeScreen from "./screens/HomeScreen"; // Assuming HomeScreen is the default export
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import HomeScreen from "./screens/HomeScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import ExperimentsScreen from "./screens/ExperimentsScreen";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import {
+  Provider as PaperProvider,
+  MD3LightTheme as DefaultTheme,
+} from "react-native-paper";
 
 const Tab = createBottomTabNavigator();
 
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "tomato",
+    secondary: "yellow",
+  },
+};
+
 export default function App() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Experiments" component={ExperimentsScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <PaperProvider theme={theme}>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={{
+            tabBarActiveTintColor: "white", // Color for active tab
+            tabBarInactiveTintColor: "gray", // Color for inactive tabs
+            tabBarShowLabel: false,
+            tabBarStyle: {
+              height: 60, // Adjust the height of the tab bar
+              paddingBottom: 10, // Adjust the padding to make the icons more spaced out
+              backgroundColor: "#3d4756",
+            },
+            tabBarIconStyle: {
+              marginTop: 5, // Adjust the margin to vertically align the icons
+            },
+            headerStyle: {
+              backgroundColor: "#3d4756", // Change the background color of the header
+              color: "white",
+            },
+            headerTintColor: "#fff",
+          }}
+        >
+          <Tab.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              tabBarIcon: ({ color }) => (
+                <Ionicons name="rocket" size={20} color={color} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Experiments"
+            component={ExperimentsScreen}
+            options={{
+              tabBarIcon: ({ color }) => (
+                <Ionicons name="list" size={20} color={color} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{
+              tabBarIcon: ({ color }) => (
+                <Ionicons name="settings" size={20} color={color} />
+              ),
+            }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
 
