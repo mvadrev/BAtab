@@ -1,101 +1,176 @@
 // screens/HomeScreen.js
-import React from "react";
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { RadioButton } from "react-native-paper";
 import { Button } from "react-native-paper";
+import * as yup from "yup";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 export default function HomeScreen() {
-  const [text, setText] = React.useState("");
+  const schema = yup.object().shape({
+    nominalVoltage: yup
+      .number()
+      .required("Nominal voltage is required")
+      .positive("Must be a positive number"),
+    maxCurrent: yup
+      .number()
+      .required("Max current is required")
+      .positive("Must be a positive number"),
+
+    formFactor: yup.string().required("Form factor is required"),
+    cathode: yup.string().required("Cathode is required"),
+    anode: yup.string().required("Anode is required"),
+    chemistry: yup
+      .string()
+      .required("Battery type is required")
+      .oneOf(["LFP", "NMC", "LCO"], "Invalid battery type"),
+  });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: "onChange",
+  });
+
+  const onSubmit = (data) => {
+    console.log("Hit");
+    if (isValid) {
+      console.log(data);
+    }
+    // Add additional submit logic here
+  };
+
+  const [text, setText] = useState("");
   const [checked, setChecked] = React.useState("first");
 
   return (
     <View style={styles.container}>
-      <Text>Enter the parameters to start the Experiment</Text>
+      <Text style={styles.headerText}>
+        Enter the parameters to start the Experiment
+      </Text>
+
       <View style={styles.form}>
-        <View style={styles.topSpacer}>
-          <TextInput
-            label="Nominal Voltage"
-            value={text}
-            onChangeText={(text) => setText(text)}
-            style={{ backgroundColor: "white" }}
-            mode="outlined"
-          />
-        </View>
-        <View style={styles.topSpacer}>
-          <TextInput
-            label="Max Current"
-            value={text}
-            onChangeText={(text) => setText(text)}
-            style={{ backgroundColor: "white" }}
-            mode="outlined"
-          />
-        </View>
+        <Controller
+          control={control}
+          name="nominalVoltage"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <View style={styles.topSpacer}>
+              <TextInput
+                label="Nominal Voltage"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                keyboardType="numeric"
+                placeholder="Enter nominal voltage"
+                style={{ backgroundColor: "white" }}
+                mode="outlined"
+              />
+            </View>
+          )}
+        />
 
-        <View style={styles.radioButtonContainerTop}>
-          <View style={styles.radioButtonContainer}>
-            <RadioButton
-              value="second"
-              status={checked === "second" ? "checked" : "unchecked"}
-              onPress={() => setChecked("second")}
-            />
-            <Text style={styles.radioLabel}>LFP</Text>
-          </View>
+        <Controller
+          control={control}
+          name="maxCurrent"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <View style={styles.topSpacer}>
+              <TextInput
+                label="Max Current"
+                value={value}
+                keyboardType="numeric"
+                onChangeText={onChange}
+                placeholder="Enter max current"
+                style={{ backgroundColor: "white" }}
+                mode="outlined"
+              />
+            </View>
+          )}
+        />
 
-          <View style={styles.radioButtonContainer}>
-            <RadioButton
-              value="second"
-              status={checked === "second" ? "checked" : "unchecked"}
-              onPress={() => setChecked("second")}
-            />
-            <Text style={styles.radioLabel}>NMC</Text>
-          </View>
+        <Controller
+          control={control}
+          name="formFactor"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <View style={styles.topSpacer}>
+              <TextInput
+                label="Form factor"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                placeholder="Enter cell chemistry"
+                style={{ backgroundColor: "white" }}
+                mode="outlined"
+              />
+            </View>
+          )}
+        />
 
-          <View style={styles.radioButtonContainer}>
-            <RadioButton
-              value="second"
-              status={checked === "second" ? "checked" : "unchecked"}
-              onPress={() => setChecked("second")}
-            />
-            <Text style={styles.radioLabel}>LCO</Text>
-          </View>
-        </View>
+        <Controller
+          control={control}
+          name="cathode"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <View style={styles.topSpacer}>
+              <TextInput
+                label="Cathode"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                style={{ backgroundColor: "white" }}
+                mode="outlined"
+              />
+            </View>
+          )}
+        />
+        <Controller
+          control={control}
+          name="anode"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <View style={styles.topSpacer}>
+              <TextInput
+                label="Anode"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                style={{ backgroundColor: "white" }}
+                mode="outlined"
+              />
+            </View>
+          )}
+        />
 
-        <View style={styles.topSpacer}>
-          <TextInput
-            label="Form factor"
-            value={text}
-            onChangeText={(text) => setText(text)}
-            style={{ backgroundColor: "white" }}
-            mode="outlined"
-          />
-        </View>
+        <Controller
+          control={control}
+          name="chemistry"
+          rules={{ required: true }} // This ensures the field is considered in validation
+          render={({ field: { onChange, onBlur, value } }) => (
+            <View style={styles.radioButtonContainerTop}>
+              {["LFP", "NMC", "LCO"].map((type) => (
+                <View key={type} style={styles.radioButtonContainer}>
+                  <RadioButton.Android
+                    value={type}
+                    status={value === type ? "checked" : "unchecked"}
+                    onPress={() => {
+                      onChange(type);
+                    }}
+                  />
+                  <Text style={styles.radioLabel}>{type}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+        />
 
-        <View style={styles.topSpacer}>
-          <TextInput
-            label="Cathode"
-            value={text}
-            onChangeText={(text) => setText(text)}
-            style={{ backgroundColor: "white" }}
-            mode="outlined"
-          />
-        </View>
-
-        <View style={styles.topSpacer}>
-          <TextInput
-            label="Anode"
-            value={text}
-            onChangeText={(text) => setText(text)}
-            style={{ backgroundColor: "white" }}
-            mode="outlined"
-          />
-        </View>
         <View style={styles.topSpacer}>
           <Button
             // icon="camera"
             mode="contained"
-            onPress={() => console.log("Pressed")}
+            onPress={handleSubmit(onSubmit)}
           >
             Start Experiment
           </Button>
@@ -116,8 +191,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20, // Add padding to ensure proper spacing
   },
   headerText: {
-    fontSize: 18,
-    marginBottom: 20,
+    fontSize: 15,
+    fontWeight: "bold",
+    justifyContent: "center",
   },
   form: {
     width: "100%",
@@ -146,6 +222,6 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   topSpacer: {
-    marginTop: 40,
+    marginTop: 30,
   },
 });

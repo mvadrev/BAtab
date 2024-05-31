@@ -32,16 +32,15 @@ export default function App() {
             tabBarInactiveTintColor: "gray", // Color for inactive tabs
             tabBarShowLabel: false,
             tabBarStyle: {
-              height: 60, // Adjust the height of the tab bar
+              height: 80, // Adjust the height of the tab bar
               paddingBottom: 10, // Adjust the padding to make the icons more spaced out
-              backgroundColor: "#3d4756",
+              backgroundColor: "black",
             },
             tabBarIconStyle: {
               marginTop: 5, // Adjust the margin to vertically align the icons
             },
             headerStyle: {
-              backgroundColor: "#3d4756", // Change the background color of the header
-              color: "white",
+              backgroundColor: "black", // Change the background color of the header
             },
             headerTintColor: "#fff",
           }}
