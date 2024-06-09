@@ -8,8 +8,12 @@ import { Button } from "react-native-paper";
 import * as yup from "yup";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigation } from "@react-navigation/native"; // Import useNavigation
+import Control from "./Control";
+import { createStackNavigator } from "@react-navigation/stack";
 
-export default function HomeScreen() {
+export default function Dashboard() {
+  const navigation = useNavigation();
   const schema = yup.object().shape({
     nominalVoltage: yup
       .number()
@@ -41,7 +45,8 @@ export default function HomeScreen() {
   const onSubmit = (data) => {
     console.log("Hit");
     if (isValid) {
-      console.log(data);
+      console.log("hahahaha", data);
+      navigation.navigate("Control", { data });
     }
     // Add additional submit logic here
   };

@@ -2,9 +2,15 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "./screens/HomeScreen";
+import { createStackNavigator } from "@react-navigation/stack";
 import SettingsScreen from "./screens/SettingsScreen";
 import ExperimentsScreen from "./screens/ExperimentsScreen";
+import LoginScreen from "./screens/LoginScreen";
+import Control from "./screens/Control";
+import Control2 from "./screens/Control2";
+
+import Dashboard from "./screens/Dashboard";
+
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   Provider as PaperProvider,
@@ -12,6 +18,7 @@ import {
 } from "react-native-paper";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const theme = {
   ...DefaultTheme,
@@ -22,57 +29,91 @@ const theme = {
   },
 };
 
+function TabNavigator() {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: "white",
+        tabBarInactiveTintColor: "gray",
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          height: 80,
+          paddingBottom: 10,
+          backgroundColor: "black",
+        },
+        tabBarIconStyle: { marginTop: 5 },
+        headerStyle: { backgroundColor: "black" },
+        headerTintColor: "#fff",
+      }}
+    >
+      <Tab.Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="rocket" size={20} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Experiments"
+        component={ExperimentsScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="list" size={20} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="settings" size={20} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
 export default function App() {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={{
-            tabBarActiveTintColor: "white", // Color for active tab
-            tabBarInactiveTintColor: "gray", // Color for inactive tabs
-            tabBarShowLabel: false,
-            tabBarStyle: {
-              height: 80, // Adjust the height of the tab bar
-              paddingBottom: 10, // Adjust the padding to make the icons more spaced out
-              backgroundColor: "black",
-            },
-            tabBarIconStyle: {
-              marginTop: 5, // Adjust the margin to vertically align the icons
-            },
-            headerStyle: {
-              backgroundColor: "black", // Change the background color of the header
-            },
-            headerTintColor: "#fff",
-          }}
-        >
-          <Tab.Screen
-            name="Home"
-            component={HomeScreen}
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
             options={{
-              tabBarIcon: ({ color }) => (
-                <Ionicons name="rocket" size={20} color={color} />
-              ),
+              headerStyle: {
+                backgroundColor: "black", // Sets the header background color to black
+              },
+              headerTintColor: "#fff", // Sets the header text and icons color to white
             }}
           />
-          <Tab.Screen
-            name="Experiments"
-            component={ExperimentsScreen}
+          <Stack.Screen
+            name="Main"
+            component={TabNavigator}
             options={{
-              tabBarIcon: ({ color }) => (
-                <Ionicons name="list" size={20} color={color} />
-              ),
+              headerShown: false,
+              headerStyle: {
+                backgroundColor: "black", // Correctly placed inside headerStyle
+              },
             }}
           />
-          <Tab.Screen
-            name="Settings"
-            component={SettingsScreen}
+
+          <Stack.Screen
+            name="Control"
+            component={Control}
             options={{
-              tabBarIcon: ({ color }) => (
-                <Ionicons name="settings" size={20} color={color} />
-              ),
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: "black", // Correctly placed inside headerStyle
+              },
             }}
           />
-        </Tab.Navigator>
+        </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
   );
