@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   button2: {
     marginTop: 20,
     color: "#003366",
-    backgroundColor: "black",
+    backgroundColor: "#18291A",
   },
   title: {
     fontSize: 24,

@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Dimensions, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Client, Message } from "paho-mqtt";
 import { LineChart } from "react-native-chart-kit";
+import { Button } from "react-native-paper";
 
 export default function Control({ route }) {
   const { formData } = route.params;
@@ -21,13 +22,13 @@ export default function Control({ route }) {
   const [I_ld, setI_ld] = useState(0);
   const [T_ld, setT_ld] = useState(0);
   const [SoC, setSoC] = useState(0);
+  const brokerUrl = "b29ed685441749cd86432c8680b3fb1a.s2.eu.hivemq.cloud";
+  const port = 8884; // WebSocket secure port for HiveMQ Cloud
+  const clientId = "clientId-" + Math.random().toString(16).substr(2, 8);
+  const mqttClient = new Client(`wss://${brokerUrl}:${port}/mqtt`, clientId);
+  const [filt, setFilt] = useState(0);
 
   useEffect(() => {
-    const brokerUrl = "b29ed685441749cd86432c8680b3fb1a.s2.eu.hivemq.cloud";
-    const port = 8884; // WebSocket secure port for HiveMQ Cloud
-    const clientId = "clientId-" + Math.random().toString(16).substr(2, 8);
-    const mqttClient = new Client(`wss://${brokerUrl}:${port}/mqtt`, clientId);
-
     mqttClient.connect({
       useSSL: true,
       userName: "vadrev",
@@ -115,10 +116,20 @@ export default function Control({ route }) {
     };
   }, []);
 
+  function onSubmitStop() {
+    const stopMessage = new Message(
+      JSON.stringify({
+        signal: "stop",
+      })
+    );
+    stopMessage.destinationName = "controlTopic";
+    mqttClient.send(stopMessage);
+  }
+
   return (
     <View Style={styles.container}>
       <View style={styles.chartContainer}>
-        {dataPoints.length > 0 && (
+        {dataPoints.length > 0 ? (
           <LineChart
             data={{
               labels: [], // No labels needed
@@ -154,6 +165,10 @@ export default function Control({ route }) {
               paddingHorizontal: 10,
             }}
           />
+        ) : (
+          <View style={styles.loading}>
+            <Text style={styles.loading}>Loading Graph..</Text>
+          </View>
         )}
       </View>
 
@@ -178,6 +193,16 @@ export default function Control({ route }) {
         <Text style={styles.item}> I_ld: {I_ld.toFixed(2)}</Text>
         <Text style={styles.item}> T_ld: {T_ld.toFixed(2)}</Text>
         {/* <View style={styles.item}>SoC: {SoC.toFixed(2)}</View> */}
+      </View>
+
+      <View style={styles.butt}>
+        <Button
+          // icon="camera"
+          mode="contained"
+          onPress={onSubmitStop}
+        >
+          Stop Experiment
+        </Button>
       </View>
 
       {/* <StatusBar style="auto" /> */}
@@ -205,12 +230,27 @@ const styles = StyleSheet.create({
   item: {
     width: "40%", // Approximately half the width of the container minus padding
     margin: "1%",
-    padding: 10,
+    padding: 15,
     marginTop: 10,
-    backgroundColor: "green",
+    backgroundColor: "white",
     justifyContent: "center",
     textAlign: "center",
     alignItems: "center",
     borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "black",
+  },
+  butt: {
+    marginTop: 40,
+    // maxWidth: "80%",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  loading: {
+    flex: 1,
+    width: "100%",
+    height: 240,
+    justifyContent: "center",
+    textAlign: "center",
   },
 });

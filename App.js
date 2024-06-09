@@ -39,10 +39,10 @@ function TabNavigator() {
         tabBarStyle: {
           height: 80,
           paddingBottom: 10,
-          backgroundColor: "black",
+          backgroundColor: "#18291A",
         },
         tabBarIconStyle: { marginTop: 5 },
-        headerStyle: { backgroundColor: "black" },
+        headerStyle: { backgroundColor: "#18291A" },
         headerTintColor: "#fff",
       }}
     >
@@ -87,7 +87,7 @@ export default function App() {
             component={LoginScreen}
             options={{
               headerStyle: {
-                backgroundColor: "black", // Sets the header background color to black
+                backgroundColor: "#18291A", // Sets the header background color to black
               },
               headerTintColor: "#fff", // Sets the header text and icons color to white
             }}
@@ -98,8 +98,9 @@ export default function App() {
             options={{
               headerShown: false,
               headerStyle: {
-                backgroundColor: "black", // Correctly placed inside headerStyle
+                backgroundColor: "#18291A", // Correctly placed inside headerStyle
               },
+              headerTintColor: "#fff",
             }}
           />
 
@@ -109,8 +110,9 @@ export default function App() {
             options={{
               headerShown: true,
               headerStyle: {
-                backgroundColor: "black", // Correctly placed inside headerStyle
+                backgroundColor: "#18291A", // Correctly placed inside headerStyle
               },
+              headerTintColor: "#fff",
             }}
           />
         </Stack.Navigator>
