@@ -10,6 +10,18 @@ export default function Control({ route }) {
   const [dataPoints, setDataPoints] = useState([]);
   const [timestamps, setTimestamps] = useState([]);
 
+  const [mode, setMode] = useState("");
+  const [Tcyc, setTcyc] = useState(0);
+  const [V_in, setV_in] = useState(0);
+  const [I_in, setI_in] = useState(0);
+  const [V_batt, setV_batt] = useState(0);
+  const [I_chg, setI_chg] = useState(0);
+  const [T_batt, setT_batt] = useState(0);
+  const [V_sys, setV_sys] = useState(0);
+  const [I_ld, setI_ld] = useState(0);
+  const [T_ld, setT_ld] = useState(0);
+  const [SoC, setSoC] = useState(0);
+
   useEffect(() => {
     const brokerUrl = "b29ed685441749cd86432c8680b3fb1a.s2.eu.hivemq.cloud";
     const port = 8884; // WebSocket secure port for HiveMQ Cloud
@@ -68,6 +80,19 @@ export default function Control({ route }) {
       const dataObject = JSON.parse(payloadString);
       console.log("Parsed value:", dataObject["V_batt"]);
 
+      // Update all possible states with new data points
+      setMode(dataObject.mode);
+      setTcyc(parseFloat(dataObject.Tcyc));
+      setV_in(parseFloat(dataObject.V_in));
+      setI_in(parseFloat(dataObject.I_in));
+      setV_batt(parseFloat(dataObject.V_batt));
+      setI_chg(parseFloat(dataObject.I_chg));
+      setT_batt(parseFloat(dataObject.T_batt));
+      setV_sys(parseFloat(dataObject.V_sys));
+      setI_ld(parseFloat(dataObject.I_ld));
+      setT_ld(parseFloat(dataObject.T_ld));
+      setSoC(parseFloat(dataObject.SoC));
+
       if (dataObject["V_batt"] !== undefined && !isNaN(dataObject["V_batt"])) {
         const timestamp = new Date().toLocaleTimeString();
 
@@ -92,13 +117,8 @@ export default function Control({ route }) {
 
   return (
     <View Style={styles.container}>
-      {/* <ScrollView contentContainerStyle={styles.container}> */}
-      <View>
-        <Text>Experiment</Text>
-        <Text>Form Data: {JSON.stringify(formData)}</Text>
-      </View>
       <View style={styles.chartContainer}>
-        {dataPoints.length > -1 && (
+        {dataPoints.length > 0 && (
           <LineChart
             data={{
               labels: [], // No labels needed
@@ -125,7 +145,7 @@ export default function Control({ route }) {
                 strokeWidth: "0.5",
                 stroke: "#ffa726", // Customizing dot colors if needed
               },
-              fromZero: true,
+              // fromZero: true,
             }}
             bezier
             style={{
@@ -137,23 +157,60 @@ export default function Control({ route }) {
         )}
       </View>
 
-      <StatusBar style="auto" />
-      {/* </ScrollView> */}
+      <View style={styles.grid}>
+        <Text style={styles.item}>Tcyc: {Tcyc.toFixed(2)}</Text>
+        <Text style={styles.item}>V_in: {V_in.toFixed(2)}</Text>
+      </View>
+      <View style={styles.grid}>
+        <Text style={styles.item}>V_in: {V_in.toFixed(2)}</Text>
+        <Text style={styles.item}>I_in: {I_in.toFixed(2)}</Text>
+      </View>
+
+      <View style={styles.grid}>
+        <Text style={styles.item}>V_batt: {V_batt.toFixed(2)}</Text>
+        <Text style={styles.item}>I_chg: {I_chg.toFixed(2)}</Text>
+      </View>
+      <View style={styles.grid}>
+        <Text style={styles.item}>V_sys: {V_sys.toFixed(2)}</Text>
+        <Text style={styles.item}>T_batt: {T_batt.toFixed(2)}</Text>
+      </View>
+      <View style={styles.grid}>
+        <Text style={styles.item}> I_ld: {I_ld.toFixed(2)}</Text>
+        <Text style={styles.item}> T_ld: {T_ld.toFixed(2)}</Text>
+        {/* <View style={styles.item}>SoC: {SoC.toFixed(2)}</View> */}
+      </View>
+
+      {/* <StatusBar style="auto" /> */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
+  // container: {
+  //   flex: 1,
+  //   padding: 20,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  // },
   chartContainer: {
     width: "100%", // Ensure the container takes full width to center the chart properly
     alignItems: "center", // Center children horizontally
     justifyContent: "center", // Center children vertically
+    // padding: 5,
+  },
+  grid: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  item: {
+    width: "40%", // Approximately half the width of the container minus padding
+    margin: "1%",
+    padding: 10,
+    marginTop: 10,
+    backgroundColor: "green",
+    justifyContent: "center",
+    textAlign: "center",
+    alignItems: "center",
+    borderRadius: 6,
   },
 });

@@ -40,6 +40,14 @@ export default function Dashboard() {
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange",
+    defaultValues: {
+      nominalVoltage: "",
+      maxCurrent: "",
+      formFactor: "",
+      cathode: "",
+      anode: "",
+      chemistry: "",
+    },
   });
 
   const onSubmit = (data) => {
