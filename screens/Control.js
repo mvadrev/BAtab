@@ -117,13 +117,23 @@ export default function Control({ route }) {
   }, []);
 
   function onSubmitStop() {
-    const stopMessage = new Message(
-      JSON.stringify({
-        signal: "stop",
-      })
-    );
-    stopMessage.destinationName = "controlTopic";
-    mqttClient.send(stopMessage);
+    mqttClient.connect({
+      useSSL: true,
+      userName: "vadrev",
+      password: "Qwerty@123",
+      onSuccess: () => {
+        console.log("Connected to MQTT broker");
+        setClient(mqttClient);
+
+        const stopMessage = new Message(JSON.stringify({ signal: "stop" }));
+        stopMessage.destinationName = "controlTopic";
+        mqttClient.send(stopMessage);
+        console.log("stop message sent to topic: controlTopic");
+      },
+      onFailure: (error) => {
+        console.log("Connection failed:", error.errorMessage);
+      },
+    });
   }
 
   return (
