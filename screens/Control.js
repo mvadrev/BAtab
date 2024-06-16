@@ -116,6 +116,19 @@ export default function Control({ route }) {
     };
   }, []);
 
+  const saveData = async () => {
+    try {
+      const response = await axios.post(
+        "http://192.168.4.22:3000/addData",
+        data
+      );
+      console.log(response);
+      setData(response.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
   function onSubmitStop() {
     mqttClient.connect({
       useSSL: true,
@@ -128,6 +141,7 @@ export default function Control({ route }) {
         const stopMessage = new Message(JSON.stringify({ signal: "stop" }));
         stopMessage.destinationName = "controlTopic";
         mqttClient.send(stopMessage);
+        saveData();
         console.log("stop message sent to topic: controlTopic");
       },
       onFailure: (error) => {

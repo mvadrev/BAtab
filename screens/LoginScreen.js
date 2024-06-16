@@ -1,16 +1,47 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
 import { TextInput, Button } from "react-native-paper";
+import axios from "axios";
+import Toast from "react-native-toast-message";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // Implement your authentication logic here
-    // For example, if login is successful:
-    navigation.navigate("Main");
-    // Otherwise, handle errors (e.g., show an error message)
+  const handleLogin = async () => {
+    try {
+      // Example data to be sent with the POST request
+      const loginData = {
+        username: email,
+        password: password,
+      };
+
+      const response = await axios.post(
+        "http://192.168.4.22:3000/login",
+        loginData
+      );
+      Toast.show({
+        type: "success",
+        text1: "Logging in..",
+        text2: "Success",
+      });
+      console.log(response);
+      // toast("Hello World");
+      navigation.navigate("Main");
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Sec",
+      });
+      // toast("Incorrect credentials..");
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  const handleRegister = () => {
+    console.log("Registering..");
+    navigation.navigate("RegisterScreen");
   };
 
   return (
@@ -47,7 +78,7 @@ const LoginScreen = ({ navigation }) => {
       <Button mode="contained" onPress={handleLogin} style={styles.button}>
         Log In
       </Button>
-      <Button mode="contained" style={styles.button2}>
+      <Button mode="contained" onPress={handleRegister} style={styles.button2}>
         Sign Up
       </Button>
     </View>

@@ -8,6 +8,7 @@ import ExperimentsScreen from "./screens/ExperimentsScreen";
 import LoginScreen from "./screens/LoginScreen";
 import Control from "./screens/Control";
 import Control2 from "./screens/Control2";
+import RegisterScreen from "./screens/Register";
 
 import Dashboard from "./screens/Dashboard";
 
@@ -85,6 +86,16 @@ export default function App() {
           <Stack.Screen
             name="Login"
             component={LoginScreen}
+            options={{
+              headerStyle: {
+                backgroundColor: "#18291A", // Sets the header background color to black
+              },
+              headerTintColor: "#fff", // Sets the header text and icons color to white
+            }}
+          />
+          <Stack.Screen
+            name="RegisterScreen"
+            component={RegisterScreen}
             options={{
               headerStyle: {
                 backgroundColor: "#18291A", // Sets the header background color to black
