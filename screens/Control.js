@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Client, Message } from "paho-mqtt";
 import { LineChart } from "react-native-chart-kit";
 import { Button } from "react-native-paper";
+import axios from "axios";
 
 export default function Control({ route }) {
   const { formData } = route.params;
@@ -118,12 +119,28 @@ export default function Control({ route }) {
 
   const saveData = async () => {
     try {
+      console.log(dataPoints);
+      const currentDate = new Date();
+      const timestamp =
+        currentDate.getFullYear() +
+        "-" +
+        (currentDate.getMonth() + 1).toString().padStart(2, "0") +
+        "-" +
+        currentDate.getDate().toString().padStart(2, "0") +
+        " " +
+        currentDate.getHours().toString().padStart(2, "0") +
+        ":" +
+        currentDate.getMinutes().toString().padStart(2, "0") +
+        ":" +
+        currentDate.getSeconds().toString().padStart(2, "0");
       const response = await axios.post(
-        "http://192.168.4.22:3000/addData",
-        data
+        "https://poc23.azurewebsites.net/addData",
+        {
+          itemName: "Experiment" + " " + timestamp,
+          measurements: dataPoints,
+        }
       );
       console.log(response);
-      setData(response.data);
     } catch (error) {
       console.error("Error fetching data: ", error);
     }

@@ -20,7 +20,7 @@ const RegisterScreen = ({ navigation }) => {
   const handleRegister = async (values) => {
     try {
       const response = await axios.post(
-        "http://192.168.4.22:3000/register",
+        "https://poc23.azurewebsites.net/register",
         values
       );
       Toast.show({

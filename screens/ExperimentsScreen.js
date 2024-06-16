@@ -12,7 +12,9 @@ export default function ExperimentsScreen() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://192.168.4.22:3000/getAllData");
+      const response = await axios.get(
+        "https://poc23.azurewebsites.net//getAllData"
+      );
       console.log(response);
       setData(response.data);
     } catch (error) {

@@ -17,7 +17,7 @@ const LoginScreen = ({ navigation }) => {
       };
 
       const response = await axios.post(
-        "http://192.168.4.22:3000/login",
+        "https://poc23.azurewebsites.net/login",
         loginData
       );
       Toast.show({
