@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ba2",
-    "slug": "ba2",
+    "slug": "muk-",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,8 +27,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "cb07cdf5-00fd-47d2-b1e8-e7d912198491"
+        "projectId": "9094275b-99ac-474b-8d4b-4b3c043f660f"
       }
-    }
+    },
+    "owner": "mvadrev"
   }
 }

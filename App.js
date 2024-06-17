@@ -9,6 +9,7 @@ import LoginScreen from "./screens/LoginScreen";
 import Control from "./screens/Control";
 import Control2 from "./screens/Control2";
 import RegisterScreen from "./screens/Register";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import Dashboard from "./screens/Dashboard";
 
@@ -80,55 +81,44 @@ function TabNavigator() {
 
 export default function App() {
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{
-              headerStyle: {
-                backgroundColor: "#18291A", // Sets the header background color to black
-              },
-              headerTintColor: "#fff", // Sets the header text and icons color to white
-            }}
-          />
-          <Stack.Screen
-            name="RegisterScreen"
-            component={RegisterScreen}
-            options={{
-              headerStyle: {
-                backgroundColor: "#18291A", // Sets the header background color to black
-              },
-              headerTintColor: "#fff", // Sets the header text and icons color to white
-            }}
-          />
-          <Stack.Screen
-            name="Main"
-            component={TabNavigator}
-            options={{
-              headerShown: false,
-              headerStyle: {
-                backgroundColor: "#18291A", // Correctly placed inside headerStyle
-              },
-              headerTintColor: "#fff",
-            }}
-          />
-
-          <Stack.Screen
-            name="Control"
-            component={Control}
-            options={{
-              headerShown: true,
-              headerStyle: {
-                backgroundColor: "#18291A", // Correctly placed inside headerStyle
-              },
-              headerTintColor: "#fff",
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{
+                headerStyle: { backgroundColor: "#18291A" },
+                headerTintColor: "#fff",
+              }}
+            />
+            <Stack.Screen
+              name="RegisterScreen"
+              component={RegisterScreen}
+              options={{
+                headerStyle: { backgroundColor: "#18291A" },
+                headerTintColor: "#fff",
+              }}
+            />
+            <Stack.Screen
+              name="Main"
+              component={TabNavigator}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Control"
+              component={Control}
+              options={{
+                headerShown: true,
+                headerStyle: { backgroundColor: "#18291A" },
+                headerTintColor: "#fff",
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </GestureHandlerRootView>
   );
 }
 
